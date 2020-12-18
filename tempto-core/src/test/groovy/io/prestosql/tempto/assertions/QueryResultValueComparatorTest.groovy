@@ -32,6 +32,7 @@ import static java.sql.JDBCType.DECIMAL
 import static java.sql.JDBCType.DOUBLE
 import static java.sql.JDBCType.FLOAT
 import static java.sql.JDBCType.INTEGER
+import static java.sql.JDBCType.JAVA_OBJECT
 import static java.sql.JDBCType.LONGVARBINARY
 import static java.sql.JDBCType.LONGVARCHAR
 import static java.sql.JDBCType.NUMERIC
@@ -129,6 +130,13 @@ class QueryResultValueComparatorTest
         TIMESTAMP               | Timestamp.valueOf("2015-02-16 10:10:10") | Timestamp.valueOf("2015-02-15 10:10:10") | false
         TIMESTAMP               | Timestamp.valueOf("2015-02-15 10:10:10") | Timestamp.valueOf("2015-02-16 10:10:10") | false
         TIMESTAMP               | Timestamp.valueOf("2015-02-15 10:10:10") | "a"                                      | false
+
+        JAVA_OBJECT             | null                                     | null                                     | true
+        JAVA_OBJECT             | UUID.fromString("50554d6e-29bb-11e5-b345-feff819cdc9f") | UUID.fromString("50554d6e-29bb-11e5-b345-feff819cdc9f") | true
+        JAVA_OBJECT             | UUID.fromString("12151fd2-7586-11e9-8f9e-2a86e4085a59") | UUID.fromString("12151fd2-7586-11e9-8f9e-2a86e4085a59") | true
+        JAVA_OBJECT             | UUID.fromString("50554d6e-29bb-11e5-b345-feff819cdc9f") | UUID.fromString("12151fd2-7586-11e9-8f9e-2a86e4085a59") | false
+        JAVA_OBJECT             | UUID.fromString("50554d6e-29bb-11e5-b345-feff819cdc9f") | "50554d6e-29bb-11e5-b345-feff819cdc9f" | false
+        JAVA_OBJECT             | UUID.fromString("50554d6e-29bb-11e5-b345-feff819cdc9f") | "a"                       | false
     }
 
     @Unroll

@@ -104,6 +104,8 @@ class QueryResultValueComparator
                 return timestampWithTimezoneEqual(actual, expected);
             case ARRAY:
                 return arrayEqual(actual, expected);
+            case JAVA_OBJECT:
+                return javaObjectEqual(actual, expected);
             default:
                 throw new RuntimeException("Unsupported sql type " + type);
         }
@@ -259,6 +261,11 @@ class QueryResultValueComparator
             return actual.equals(expected);
         }
         return false;
+    }
+
+    private boolean javaObjectEqual(Object actual, Object expected)
+    {
+        return actual.equals(expected);
     }
 
     private static boolean isLongOrNarrower(Object value)
