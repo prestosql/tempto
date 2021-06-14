@@ -25,7 +25,7 @@
     </scm>
 
     <properties>
-        <dep.httpcomponents.version>4.4</dep.httpcomponents.version>
+        <dep.httpcomponents.version>4.5.13</dep.httpcomponents.version>
 
         <air.check.skip-checkstyle>true</air.check.skip-checkstyle>
         <air.check.skip-modernizer>true</air.check.skip-modernizer>
