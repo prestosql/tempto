@@ -19,6 +19,6 @@ public class QueryExecutionException
 {
     public QueryExecutionException(Throwable e)
     {
-        super(e);
+        super(e.getMessage(), e);
     }
 }

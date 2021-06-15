@@ -496,17 +496,26 @@ B|ARGENTINA|SOUTH AMERICA|>'''
 
         then:
         def e = thrown(AssertionError)
-        e.message == "Query failed with unexpected error message: 'java.lang.RuntimeException: foo bar' \n" +
+        e.message == "Query failed with unexpected error message: 'foo bar' \n" +
                 " Expected error message to contain 'dummy'"
         def suppressed = e.getSuppressed()[0]
         suppressed.class == QueryExecutionException.class
-        suppressed.message == "java.lang.RuntimeException: foo bar"
+        suppressed.message == "foo bar"
     }
 
     def 'QueryExecutionAssert - right error message'()
     {
         when:
         assertThat({ throw new QueryExecutionException(new RuntimeException("dummy")) }).failsWithMessage("dummy")
+
+        then:
+        noExceptionThrown()
+    }
+
+    def 'QueryExecutionAssert - null error message'()
+    {
+        when:
+        assertThat({ throw new QueryExecutionException(new RuntimeException()) }).failsWithMessage("") // null message is coalesced into empty
 
         then:
         noExceptionThrown()
@@ -519,17 +528,17 @@ B|ARGENTINA|SOUTH AMERICA|>'''
 
         then:
         def e = thrown(AssertionError)
-        e.message == "Query failed with unexpected error message: 'java.lang.RuntimeException: foo bar' \n" +
+        e.message == "Query failed with unexpected error message: 'foo bar' \n" +
                 " Expected error message to match 'foo'"
         def suppressed = e.getSuppressed()[0]
         suppressed.class == QueryExecutionException.class
-        suppressed.message == "java.lang.RuntimeException: foo bar"
+        suppressed.message == "foo bar"
     }
 
     def 'QueryExecutionAssert - error message matches'()
     {
         when:
-        assertThat({ throw new QueryExecutionException(new RuntimeException("dummy")) }).failsWithMessageMatching("^java.lang.RuntimeException: dug?(m){2,4}y\$")
+        assertThat({ throw new QueryExecutionException(new RuntimeException("dummy")) }).failsWithMessageMatching("^dug?(m){2,4}y\$")
 
         then:
         noExceptionThrown()
