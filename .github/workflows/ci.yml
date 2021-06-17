@@ -1,0 +1,28 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: ['8', '11', '15']
+      
+    steps:
+    - uses: actions/checkout@v2
+    - name: ${{ matrix.java }}
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.java }}
+
+    - name: Maven Install Dependencies
+      run: mvn install -B -V -DskipTests -Dair.check.skip-all
+    - name: Maven Offline
+      run: mvn dependency:go-offline -B -Dsilent
+    - name: Run On Docker
+      run: mvn install -B
+            - ./tempto-examples/bin/run_on_docker.sh --thread-count 2 -x failing -e io.prestosql.tempto.examples.ExclusionTest.failingTest,io.prestosql.tempto.examples.AnotherExclusionTest
+            - CONFIG_FILE=tempto-configuration-read-only.yaml ./tempto-examples/bin/run_on_docker.sh --thread-count 2 -g in_memory
+            - CONFIG_FILE=tempto-configuration-no-db.yaml ./tempto-examples/bin/run_on_docker.sh --thread-count 2 -g ssh
+            - CONFIG_FILE=tempto-configuration-invalid-ssh-and-psql.yaml ./tempto-examples/bin/run_on_docker.sh --thread-count 2 -g in_memory
